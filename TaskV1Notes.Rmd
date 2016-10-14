@@ -1,0 +1,10 @@
+---
+title: "Category Learning Task V1 Notes"
+author: "Chris Mellinger"
+date: "9/26/2016"
+output: pdf_document
+---
+
+# Choosing Fribbles
+
+I'm trying to get 18 Fribbles from each category. As of now, I'm using Fribbles from the Fa1 and Fa2 categories. Each of those categories has 3 different "tail" options, so I'm taking 6 of each type of tail from each category.

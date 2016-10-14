@@ -1,0 +1,7 @@
+How I converted the files to jpgs:
+
+I used imagemagick installing via homebrew. Then this line:
+
+for f in *.bmp; do convert "$f" -alpha on -fill none -draw 'color 0,0 replace' "${f%%.bmp}.png"; done
+
+And equivalently for the other folder.
