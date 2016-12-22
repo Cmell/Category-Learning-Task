@@ -46,7 +46,7 @@ function rndSelect(array, n, replace) {
 
     var newArr = [];
 
-    for (i = 0; i < repeat; i++) {
+    for (var i=0; i < repeat; i++) {
       newArr = shuffle(array);
       result = result.concat(newArr);
       //console.log(i);
@@ -55,6 +55,12 @@ function rndSelect(array, n, replace) {
     result = result.concat(newArr.slice(0, remainder));
   }
   return result;
+}
+
+function getRandomIntInclusive(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
