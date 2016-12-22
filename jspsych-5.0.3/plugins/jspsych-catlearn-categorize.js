@@ -38,6 +38,16 @@ jsPsych.plugins.catlearncategorize = (function() {
     // that need to be cleared if the trial ends early
     var setTimeoutHandlers = [];
 
+    // if prompt is set, show prompt (hopefully above the stimulus)
+    if (trial.prompt !== "") {
+      display_element.append($('<div>', {
+        "id": 'jspsych-categorize-prompt',
+        "class": 'jspsych-categorize-stimulus',
+        "html": trial.prompt,
+        "style": 'text-align:center'
+      }));
+    }
+
     if (!trial.is_html) {
       // add image to display
       display_element.append($('<img>', {
@@ -60,10 +70,7 @@ jsPsych.plugins.catlearncategorize = (function() {
       }, trial.timing_stim));
     }
 
-    // if prompt is set, show prompt
-    if (trial.prompt !== "") {
-      display_element.append(trial.prompt);
-    }
+
 
     var trial_data = {};
 
@@ -94,7 +101,7 @@ jsPsych.plugins.catlearncategorize = (function() {
       display_element.html('');
 
       var timeout = info.rt == -1;
-      if (trial.timing_feedback_duration > 0) {
+      if (trial.timing_feedback_duration != 0) {
         doFeedback(correct, timeout);
       } else {
         endTrial();
@@ -123,12 +130,23 @@ jsPsych.plugins.catlearncategorize = (function() {
       if (timeout && !trial.show_feedback_on_timeout) {
         display_element.append(trial.timeout_message);
       } else {
-        // show image during feedback if flag is set
+
+        // keep the prompt on the screen just as before
+        if (trial.prompt !== "") {
+          display_element.append($('<div>', {
+            "id": 'jspsych-categorize-prompt',
+            "class": 'jspsych-categorize-stimulus',
+            "html": trial.prompt,
+            "style": 'text-align:center'
+          }));
+        }
+
+        // show the feedback image during feedback if flag is set
         if (trial.show_stim_with_feedback) {
           if (!trial.is_html) {
             // add image to display
             display_element.append($('<img>', {
-              "src": trial.stimulus,
+              "src": trial.feedback_stimulus,
               "class": 'jspsych-categorize-stimulus',
               "id": 'jspsych-categorize-stimulus'
             }));
@@ -136,21 +154,28 @@ jsPsych.plugins.catlearncategorize = (function() {
             display_element.append($('<div>', {
               "id": 'jspsych-categorize-stimulus',
               "class": 'jspsych-categorize-stimulus',
-              "html": trial.stimulus
+              "html": trial.feedback_stimulus
             }));
           }
         }
 
         // substitute answer in feedback string.
         var atext = "";
+        var atextCol = ''
         if (correct) {
           atext = trial.correct_text.replace("%ANS%", trial.text_answer);
+          atextCol = '#1ca803';
         } else {
           atext = trial.incorrect_text.replace("%ANS%", trial.text_answer);
+          atextCol = '#bf1303'
         }
 
         // show the feedback
-        display_element.append(atext);
+        display_element.append($('<p>', {
+          "id": 'yspsych-categorize-feedback',
+          "style": 'font-size:40px;text-align:center;color:' + atextCol + ';',
+          "html": atext
+        }));
       }
       // check if force correct button press is set
       if (trial.force_correct_button_press && correct === false && ((timeout && trial.show_feedback_on_timeout) || !timeout)) {
@@ -168,14 +193,24 @@ jsPsych.plugins.catlearncategorize = (function() {
         });
 
       } else {
-        setTimeout(function() {
-          endTrial();
-        }, trial.timing_feedback_duration);
+        if (trial.timing_feedback_duration < 0) {
+          jsPsych.pluginAPI.getKeyboardResponse({
+            callback_function: endTrial,
+            valid_responses: [],
+            rt_method: 'date',
+            persist: false,
+            allow_held_key: false
+          });
+        } else {
+          setTimeout(function() {
+            endTrial();
+          }, trial.timing_feedback_duration);
+        }
       }
 
     }
 
-    function endTrial() {
+    function endTrial(info) {
       display_element.html("");
       jsPsych.finishTrial(trial_data);
     }
