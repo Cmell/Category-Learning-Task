@@ -36,42 +36,52 @@ var minTrials = 20;
 var criterion = .95;
 var critMet	= false;
 
-
-
 // Some image information for stimuli when building the blocks.
 var imSize = [
-	[[300, 300], [300, 300]]
+	[[200, 200], [200, 200]]
 ];
 var feedSize = [
-	[[300, 300], [300, 300]],
-	[[300, 40], [300, 40]]
+	[[200, 200], [200, 200]],
+	[[200, 40], [200, 40]]
 ];
 
-// REVIEW: Do we care about counterbalancing key assignments? YES
+// Some filenames to use later
+fam1LabFl = './ThaiLab.png';
+fam2LabFl = './ChineseLab.png';
+
 var fam1Key =  rndSelect(['e', 'i'], 1)[0];
 var fam1KeyCode = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(fam1Key);
 var fam2Key = fam1Key == 'e' ? 'i' : 'e';
 var fam2KeyCode = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(fam2Key);
-var fam1Name = rndSelect(['Zoink', 'Kongo'], 1)[0];
-var fam2Name = fam1Name == 'Kongo' ? 'Zoink' : 'Kongo';
-if (fam1Key == 'e' && fam1Name == 'Zoink') {
-	var eKeyFamily = 'Zoink';
-	var iKeyFamily = 'Kongo';
-} else if (fam1Key == 'e' && fam1Name == 'Kongo') {
-	var eKeyFamily = 'Kongo';
-	var iKeyFamily = 'Zoink';
-} else if (fam1Key == 'i' && fam1Name == 'Zoink') {
-	var eKeyFamily = 'Kongo';
-	var iKeyFamily = 'Zoink';
-} else if (fam1Key == 'i' && fam1Name == 'Kongo') {
-	var eKeyFamily = 'Zoink';
-	var iKeyFamily = 'Kongo';
+var fam1Name = 'Thai';
+var fam2Name = 'Chinese';
+if (fam1Key == 'e') {
+	var eKeyFamily = 'Thai';
+	var iKeyFamily = 'Chinese';
+} else if (fam1Key == 'i') {
+	var eKeyFamily = 'Chinese';
+	var iKeyFamily = 'Thai';
 }
 
-// Get the file names of the families
-var fam1Files = <?php echo json_encode(glob('./Family1/*.jpg')); ?>
+// Test keys should be different
+var testKeys = ['b', 'y'];
+var testFam1Key = rndSelect(testKeys, 1)[0];
+var testFam2Key = testFam1Key == testKeys[0] ? testKeys[1] : testKeys[0];
+var testFam1KeyCode = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(testFam1Key);
+var testFam2KeyCode = jsPsych.pluginAPI.convertKeyCharacterToKeyCode(testFam2Key);
+if (testFam1Key == 'b') {
+  var bTestKeyFamily = 'Thai';
+  var yTestKeyFamily = 'Chinese';
+} else if (testFam1Key == 'y') {
+  var bTestKeyFamily = 'Chinese';
+  var yTestKeyFamily = 'Thai';
+}
 
-var fam2Files = <?php echo json_encode(glob('./Family2/*.jpg')); ?>
+
+// Get the file names of the families
+var fam1Files = <?php echo json_encode(glob('./Family1/*.png')); ?>
+
+var fam2Files = <?php echo json_encode(glob('./Family2/*.png')); ?>
 
 // Choose a number of stimuli for the test trials, and store the rest.
 var fam1TestFiles = rndSelect(fam1Files, numTestTrials/2);
@@ -156,9 +166,9 @@ var feedbackText = function () {
 	var numRight = successes('all');
 	percRate = Math.round(numRight.rate * 100);
 	return(
-		'<p style="font-size:120%;text-align:center;">So far, you have\
-		 correctly identified ' + numRight.correct +
-		' out of ' + numRight.total + ' plants, for a success rate of ' +
+		'<p style="font-size:120%;text-align:center;">So far, you were\
+		 correct for ' + numRight.correct +
+		' out of ' + numRight.total + ' trials, for a success rate of ' +
 		percRate + '%.</p><p style="text-align:center;">Press the spacebar to \
 		continue.</p>'
 	);
@@ -185,15 +195,15 @@ var lastTrial = function() {
 	var ratePerc = Math.round(100 * numRight.rate);
 	if (critMet) {
 		var text = '<p style="text-align:center;color:green;">\
-		Congratulations! You correctly identified ' + ratePerc +
-		'% of the last 20 plants.</p>\
+		Congratulations! You were correct for ' + ratePerc +
+		'% of the last 20 trials.</p>\
 		<p style="text-align:center;">\
 		The study is now over. Thank you for participating in this study.\
 		</p>'
 	} else {
 		var text = '<p style="text-align:center;color:green;">\
-		Great job! You correctly identified ' + ratePerc +
-		'% of the last 20 plants.\
+		Great job! You were correct for ' + ratePerc +
+		'% of the last 20 trials.\
 		</p><p style="text-align:center;">\
 		The study is now over. Thank you for participating in this study.\
 		</p>'
@@ -216,8 +226,8 @@ for(i=0; i<numTestTrials; i++) {
 	// set up the timeline.
 	switch (cond) {
 		case 'match':
-		var fam1FeedLabs = ['./Family1Lab.jpeg', './Family1Lab.jpeg'];
-		var fam2FeedLabs = ['./Family2Lab.jpeg', './Family2Lab.jpeg'];
+		var fam1FeedLabs = [fam1LabFl, fam1LabFl];
+		var fam2FeedLabs = [fam2LabFl, fam2LabFl];
 		// Set up the timelines
 
 		// Make 2 learning trials for each family, and a test trial.
@@ -258,11 +268,11 @@ for(i=0; i<numTestTrials; i++) {
 			show_stim_with_feedback: true,
 			prompt: 'Press the <span style="font-size:120%">"e"</span> key if these \
 			are ' + eKeyFamily +
-			's and the <span style="font-size:120%">"i"</span> key if they are ' +
-			iKeyFamily + 's.',
+			' people and the <span style="font-size:120%">"i"</span> key if they are ' +
+			iKeyFamily + ' people.',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
-			timing_feedback_duration: 1000,
+			timing_feedback_duration: 1200,
 			correct_text: "Correct!",
 			incorrect_text: "Wrong!",
 			timeline: [
@@ -313,8 +323,8 @@ for(i=0; i<numTestTrials; i++) {
 		}
 		break;
 		case 'contrast':
-		var fam1FeedLabs = ['./Family1Lab.jpeg', './Family2Lab.jpeg'];
-		var fam2FeedLabs = ['./Family2Lab.jpeg', './Family1Lab.jpeg'];
+		var fam1FeedLabs = [fam1LabFl, fam2LabFl];
+		var fam2FeedLabs = [fam2LabFl, fam1LabFl];
 		// Make 2 learning trials for each family, and a test trial.
 		// Now, the family designation in the variable names, e.g., f1, refers to
 		// the left-hand stimulus
@@ -354,13 +364,13 @@ for(i=0; i<numTestTrials; i++) {
 			choices: [fam1Key, fam2Key],
 			show_stim_with_feedback: true,
 			prompt: '<p>Press the <span style="font-size:120%">"e"</span> key if the \
-			fungus on the left is ' + eKeyFamily + ' and the fungus on the right is ' +
+			face on the left is ' + eKeyFamily + ' and the face on the right is ' +
 			iKeyFamily + '.</p><p>Press the <span style="font-size:120%">"i"</span>\
-			key if the fungus on the left is ' + iKeyFamily + ' and the fungus on the\
+			key if the face on the left is ' + iKeyFamily + ' and the face on the\
 			right is ' + eKeyFamily + '.</p>',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
-			timing_feedback_duration: 1000,
+			timing_feedback_duration: 1200,
 			correct_text: "Correct!",
 			incorrect_text: "Wrong!",
 			timeline: [
@@ -421,11 +431,11 @@ for(i=0; i<numTestTrials; i++) {
 	var testTrial = {
 		stimulus: testTrialStim,
 		key_answer: curTrial[3],
-		choices: [fam1Key, fam2Key],
+		choices: [testFam1Key, testFam2Key],
 		timing_feedback_duration: 0,
 		timing_post_trial: 500,
-		prompt: 'Is this a ' + eKeyFamily + ' (Press the "e" key), ' +
-		'or a ' + iKeyFamily + ' (Press the "i" key)?',
+		prompt: 'Is this a ' + yTestKeyFamily + ' person (Press the "y" key), ' +
+		'or a ' + bTestKeyFamily + ' person (Press the "b" key)?',
 		data: {
 			family: curTrial[1],
 			file1: curTrial[0]
@@ -462,19 +472,26 @@ var timeline = [];
 var instText1 = '\
 <p>\
 The purpose of this study is to test your ability to learn to differentiate \
-categories of stimuli.\
+categories of people.\
 </p><p>\
-Imagine that mankind has discovered a new planet, and you are one of the experts \
-chosen to explore the planet for the first time. You discover two species of \
-fungus on this planet: '+ fam1Name + 's and ' + fam2Name + 's. You know that \
-they are different from genetic tests, but you cannot yet tell them apart just \
-by looking at them. This computer program has identified several samples of \
-the fungus, and it is going to help you learn to tell them apart.\
+In everyday life, most people are able to "categorize" other people quickly. \
+Some categories are very obvious, such as gender: typically, it is easy to say \
+if a person is a male or a female. Some categories are harder. For instance, \
+most people from the U.S. might have trouble telling Mexican people apart from \
+Argentinians. However, someone who has lived in Mexico or Argentina might have an \
+easier time.\
 </p><p>\
-The program will show you two enhanced images of the fungus at a time. You \
-should do your best to learn which kind fungus is a ' + fam1Name + ', and which is a \
+In this task, we want to see how quickly you can learn to differentiate two \
+categories of people. We think it is likely that you have not had much \
+experience with these two categories: ' + fam1Name + ' people, and ' + fam2Name
++ ' people. During this task, do your best to try and categorize each person. \
+Note that you are NOT trying to remember each face! Rather, you are trying to \
+say whether a person is ' + fam1Name + ' or ' + fam2Name + '.\
+</p><p>\
+The program will show you two faces at a time. You \
+should do your best to learn which faces are ' + fam1Name + ', and which are \
 ' + fam2Name + '. When you can complete 19 out of 20 identifications correctly, \
-you will be finished learning the fungus. Good luck!\
+you will be finished learning the nationalities. Good luck!\
 </p><p style="text-align:center">\
 Press the spacebar to continue.\
 </p>\
@@ -482,21 +499,33 @@ Press the spacebar to continue.\
 
 if (cond=='match') {
 	var instText2 = '<p>\
-	The computer will show you two images of fungus. You should identify them by\
-	pressing the "e" key if they are ' + eKeyFamily + 's, or by pressing the "i" \
-	key if they are ' + iKeyFamily + 's. Every so often, the computer will test\
-	you without feedback on a single fungus sample.</p><p style="text-align:center">\
+	The computer will show you two images of faces. You should identify them by\
+	pressing the "e" key if they are ' + eKeyFamily + ', or by pressing the "i" \
+	key if they are ' + iKeyFamily + '. Every so often, the computer will test\
+	you without feedback on a single face.</p>\
+	<p>\
+	You might have to guess! Especially for the first couple of face-pairs, the \
+	best strategy may be to guess which faces you are looking at, and pay \
+	attention to the feedback to learn the real answer.\
+	</p>\
+	<p style="text-align:center">\
 	Press the spacebar to begin.\
 	</p>\
 	';
 } else if (cond=='contrast') {
 	var instText2	 = '<p>\
-	The computer will show you two images of fungus. You should identify them by\
+	The computer will show you two images of faces. You should identify them by\
 	pressing the "e" key if the one on the left is ' + eKeyFamily + ' and the , \
 	one on the right is ' + iKeyFamily + ', or by pressing the "i" \
 	key if the one on the left is ' + iKeyFamily + ' and the one on the right is \
 	' + eKeyFamily + '. Every so often, the computer will test\
-	you without feedback on a single fungus sample.</p><p style="text-align:center">\
+	you without feedback on a single face.</p>\
+	<p>\
+	You might have to guess! Especially for the first couple of face-pairs, the \
+	best strategy may be to guess which faces you are looking at, and pay \
+	attention to the feedback to learn the real answer.\
+	</p>\
+	<p style="text-align:center">\
 	Press the spacebar to begin.\
 	</p>\
 	';
