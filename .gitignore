@@ -2,3 +2,8 @@ img/
 Testing.html
 Testing.php
 experimentDemo.html
+*.jpeg
+*.jpg
+*.png
+*.pic
+*.xcf

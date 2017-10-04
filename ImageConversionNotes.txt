@@ -1,4 +1,4 @@
-How I converted the files to jpgs:
+How I converted the files to png:
 
 I used imagemagick installing via homebrew. Then this line:
 
