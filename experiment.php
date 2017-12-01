@@ -1,7 +1,12 @@
+<?php
+require_once('./Resources/pInfo.php');
+?>
+
 <!doctype html>
 <html>
 <head>
 	<title>My experiment</title>
+  <meta charset="utf-8" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.2/seedrandom.min.js"></script>
 	<script src="jspsych-5.0.3/jspsych.js"></script>
@@ -9,7 +14,7 @@
 	<script src="jspsych-5.0.3/plugins/jspsych-single-stim.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-catlearn-vsl-grid-scene.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-catlearn-categorize.js"></script>
-	<script src="Util.js"></script>
+	<script src="https://cdn.rawgit.com/Cmell/JavascriptUtilsV9-14-2017/master/Util.js"></script>
 	<link href="jspsych-5.0.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
@@ -18,9 +23,40 @@
 
 // Generate a seed for the random number generator
 var d = new Date();
-var pid = d.getTime();
+var seed = d.getTime();
 
-Math.seedrandom(pid);
+// get the pid:
+<?php
+// Get the pid:
+$pid = getNewPID("./Resources/PID.csv");
+echo "pid = ".$pid.";";
+?>
+
+// Some utility variables
+var pidStr = "00" + pid; pidStr = pidStr.substr(pidStr.length - 3);// lead 0s
+
+var flPrefix = "./data/cat_"
+
+var filename = flPrefix + pidStr + "_" + seed + ".csv";
+
+var fields = [
+  "pid",
+  "condition",
+  "seed",
+  "e_family",
+  "i_family",
+  "trial_type",
+  "file1",
+  "file2",
+  "trial_index",
+  "key_press",
+  "correct",
+  "rt",
+  "time_elapsed",
+  "trial_purpose"
+];
+
+Math.seedrandom(seed);
 
 // Some variable declarations
 var feedbackTrial, f1T1Fl, f1T2Fl, f2T1Fl, f2T2Fl, fam1T1Stim, fam1T2Stim;
@@ -119,12 +155,62 @@ for (i=0; i<numTestTrials; i++) {
 	}
 };
 
+var endTrial = function (trial) {
+  var csvLn = trialObjToCSV(trial);
+  saveData(filename, csvLn);
+};
+
+var generateHeader = function () {
+  var line = '';
+  var f;
+  var fL = fields.length;
+  for (i=0; i < fL; i++) {
+    f = fields[i];
+    if (i < fL - 1) {
+      line += f + ',';
+    } else {
+      // don't include the comma on the last one.
+      line += f;
+    }
+  }
+
+  // Add an eol character or two
+  line += '\r\n';
+  return(line);
+};
+
+var sendHeader = function () {
+  saveData(filename, generateHeader());
+}
+
+var trialObjToCSV = function (t) {
+  // t is the trial object
+  var f;
+  var line = '';
+  var fL = fields.length;
+  var thing;
+
+  for (i=0; i < fL; i++) {
+    f = fields[i];
+    thing = typeof t[f] === 'undefined' ? 'NA' : t[f];
+    if (i < fL - 1) {
+      line += thing + ',';
+    } else {
+      // Don't include the comma on the last one.
+      line += thing;
+    }
+  }
+  // Add an eol character or two
+  line += '\r\n';
+  return(line);
+};
+
 // Save data function
 var saveData = function (filename, filedata) {
 	$.ajax({
 		type: 'post',
 		cache: false,
-		url: './save_data.php',
+		url: './Resources/SaveData.php',
 		data: {
 			filename: filename,
 			filedata: filedata
@@ -213,6 +299,9 @@ var lastTrial = function() {
 
 // TODO: max number of trials, or meet learning criterion (20 at 95%, 200 trial max))
 
+// Initialize the data file
+sendHeader();
+
 // Timeline initialization. These parameters are applied to every trial.
 var block = {
 	type: 'catlearncategorize',
@@ -275,6 +364,10 @@ for(i=0; i<numTestTrials; i++) {
 			timing_feedback_duration: 1200,
 			correct_text: "Correct!",
 			incorrect_text: "Wrong!",
+      data: {
+        trial_purpose: 'learn',
+      },
+      on_finish: endTrial,
 			timeline: [
 				// Family 1 trials
 				{
@@ -283,6 +376,7 @@ for(i=0; i<numTestTrials; i++) {
 					key_answer: fam1KeyCode,
 					text_answer: fam1Name,
 					data: {
+            // file1 refers to the left image, and file2 refers to the right image
 						file1: f1T1Fl[0],
 						file2: f1T1Fl[1]
 					}
@@ -373,6 +467,10 @@ for(i=0; i<numTestTrials; i++) {
 			timing_feedback_duration: 1200,
 			correct_text: "Correct!",
 			incorrect_text: "Wrong!",
+      data: {
+        trial_purpose: 'learn'
+      },
+      on_finish: endTrial,
 			timeline: [
 				// Family 1 trials
 				{
@@ -436,9 +534,11 @@ for(i=0; i<numTestTrials; i++) {
 		timing_post_trial: 500,
 		prompt: 'Is this a ' + yTestKeyFamily + ' person (Press the "y" key), ' +
 		'or a ' + bTestKeyFamily + ' person (Press the "b" key)?',
+    on_finish: endTrial,
 		data: {
 			family: curTrial[1],
-			file1: curTrial[0]
+			file1: curTrial[0],
+      trial_purpose: 'test'
 		}
 	};
 	// Add them to the block timeline.
@@ -464,7 +564,7 @@ jsPsych.data.addProperties({
 	condition: cond,
 	e_family: eKeyFamily,
 	i_family: iKeyFamily,
-	date: pid
+	seed: seed
 });
 
 var timeline = [];
@@ -542,18 +642,17 @@ instr_block = {
 timeline.push(instr_block);
 timeline.push(block);
 
-var end_trial = {
+var last_trial = {
 	type: 'text',
 	text: lastTrial
 }
-timeline.push(end_trial);
+timeline.push(last_trial);
 
 var dataFileName = String(pid) + '.csv'
 
 jsPsych.init({
 	timeline: timeline,
 	on_finish: function() {
-		//jsPsych.data.displayData();
 		// TODO: Make the filename a composite of the ID and the date.
 		;
 	}

@@ -86,8 +86,8 @@ input[type="text"] {
 /* Container holding jsPsych content */
 
 .jspsych-display-element {
-  width: 800px;
-  margin: 50px auto 50px auto;
+  width: 1260px;
+  margin: 15px auto 15px auto;
 }
 
 /* jsPsych progress bar */
@@ -143,12 +143,6 @@ input[type="text"] {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-#yspsych-categorize-feedback {
-  margin-top: 0px;
-  margin-bottom: 0px;
 }
 
 /* PLUGIN: jspsych-free-sort */
@@ -184,6 +178,23 @@ input[type="text"] {
   margin: auto;
 }
 
+/* PLUGIN: jspsych-sequential-priming */
+
+#jspsych-sequential-priming-stimulus {
+  display: block;
+  margin: auto;
+  margin-top: auto;
+  line-height: 250px;
+  height: 250px;
+}
+
+/* for countdowns */
+
+#jspsych-countdown-numbers {
+  font-size: 120px;
+  text-align: center;
+}
+
 /* PLUGIN: jspsych-palmer */
 
 #jspsych-palmer-snapCanvas {
@@ -192,6 +203,14 @@ input[type="text"] {
 }
 
 /* PLUGIN: jspsych-same-different */
+
+.jspsych-same-different-stimulus {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* PLUGIN: jspsych-sequential-priming */
 
 .jspsych-same-different-stimulus {
   display: block;

@@ -7,3 +7,5 @@ experimentDemo.html
 *.png
 *.pic
 *.xcf
+Resources/data/*
+Resources/PID.csv

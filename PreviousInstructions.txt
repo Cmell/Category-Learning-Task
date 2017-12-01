@@ -1,0 +1,20 @@
+var instText1 = '\
+<p>\
+The purpose of this study is to test your ability to learn to differentiate \
+categories of stimuli.\
+</p><p>\
+Imagine that mankind has discovered a new planet, and you are one of the experts \
+chosen to explore the planet for the first time. You discover two species of \
+fungus on this planet: '+ fam1Name + 's and ' + fam2Name + 's. You know that \
+they are different from genetic tests, but you cannot yet tell them apart just \
+by looking at them. This computer program has identified several samples of \
+the fungus, and it is going to help you learn to tell them apart.\
+</p><p>\
+The program will show you two enhanced images of the fungus at a time. You \
+should do your best to learn which kind fungus is a ' + fam1Name + ', and which is a \
+' + fam2Name + '. When you can complete 19 out of 20 identifications correctly, \
+you will be finished learning the fungus. Good luck!\
+</p><p style="text-align:center">\
+Press the spacebar to continue.\
+</p>\
+';
