@@ -14,7 +14,7 @@ require_once('./Resources/pInfo.php');
 	<script src="jspsych-5.0.3/plugins/jspsych-single-stim.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-catlearn-vsl-grid-scene.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-catlearn-categorize.js"></script>
-	<script src="https://cdn.rawgit.com/Cmell/JavascriptUtilsV9-14-2017/master/Util.js"></script>
+	<script src="https://cdn.rawgit.com/Cmell/JavascriptUtilsV9-20-2017/master/Util.js"></script>
 	<link href="jspsych-5.0.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 </head>
 <body>
@@ -118,6 +118,14 @@ if (testFam1Key == 'b') {
 var fam1Files = <?php echo json_encode(glob('./Family1/*.png')); ?>
 
 var fam2Files = <?php echo json_encode(glob('./Family2/*.png')); ?>
+
+// Preload the images
+var allIms = fam1Files.concat(fam2Files);
+var imsToLoad = new Array();
+for (var i=0; i < allIms.length; i++) {
+  var tempArr = [allIms[i], [imSize[0]]]
+}
+preloadResizedImages(allIms);
 
 // Choose a number of stimuli for the test trials, and store the rest.
 var fam1TestFiles = rndSelect(fam1Files, numTestTrials/2);
