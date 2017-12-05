@@ -66,7 +66,7 @@ var fam2T1Stim, fam2T2Stim, learnTrials, numRight;
 var condition = 'random';
 var cond = condition == 'random' ? rndSelect(['match', 'contrast'], 1)[0] : condition;
 // Some experiment parameters.
-var numTestTrials = 10; // Should be even; also represents the maximum trials
+var numTestTrials = 30; // Should be even; also represents the maximum trials
 var numLearnTrials = 4 * numTestTrials;
 var minTrials = 20;
 var criterion = .95;
