@@ -9,3 +9,4 @@ experimentDemo.html
 *.xcf
 Resources/data/*
 Resources/PID.csv
+Resources/PID_trialruns.csv
