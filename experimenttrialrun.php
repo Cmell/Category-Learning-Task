@@ -363,10 +363,9 @@ for(i=0; i<numTestTrials; i++) {
 		learnTrials = {
 			choices: [fam1Key, fam2Key],
 			show_stim_with_feedback: true,
-			prompt: 'Press the <span style="font-size:120%">"e"</span> key if these \
-			are ' + eKeyFamily +
-			' people and the <span style="font-size:120%">"i"</span> key if they are ' +
-			iKeyFamily + ' people.',
+			prompt: '<p>Type <span style="font-size:120%">"e"</span> if both \
+			people are ' + eKeyFamily + '.</p><p>Type <span style="font-size:120%">"i"</span>\
+			if both people are ' + iKeyFamily + '.</p>',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
 			timing_feedback_duration: 1200,
@@ -465,10 +464,10 @@ for(i=0; i<numTestTrials; i++) {
 		learnTrials = {
 			choices: [fam1Key, fam2Key],
 			show_stim_with_feedback: true,
-			prompt: '<p>Press the <span style="font-size:120%">"e"</span> key if the \
-			face on the left is ' + eKeyFamily + ' and the face on the right is ' +
-			iKeyFamily + '.</p><p>Press the <span style="font-size:120%">"i"</span>\
-			key if the face on the left is ' + iKeyFamily + ' and the face on the\
+			prompt: '<p>Type <span style="font-size:120%">"e"</span> if the \
+			person on the left is ' + eKeyFamily + ' and the person on the right is ' +
+			iKeyFamily + '.</p><p>Type <span style="font-size:120%">"i"</span>\
+			if the person on the left is ' + iKeyFamily + ' and the person on the\
 			right is ' + eKeyFamily + '.</p>',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
