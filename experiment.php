@@ -364,8 +364,8 @@ for(i=0; i<numTestTrials; i++) {
 			choices: [fam1Key, fam2Key],
 			show_stim_with_feedback: true,
 			prompt: '<p>Type <span style="font-size:120%">"e"</span> if both \
-			faces are ' + eKeyFamily + '.</p><p>Type <span style="font-size:120%">"i"</span>\
-			if both faces are ' + iKeyFamily + '.</p>',
+			people are ' + eKeyFamily + '.</p><p>Type <span style="font-size:120%">"i"</span>\
+			if both people are ' + iKeyFamily + '.</p>',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
 			timing_feedback_duration: 1200,
@@ -465,9 +465,9 @@ for(i=0; i<numTestTrials; i++) {
 			choices: [fam1Key, fam2Key],
 			show_stim_with_feedback: true,
 			prompt: '<p>Type <span style="font-size:120%">"e"</span> if the \
-			face on the left is ' + eKeyFamily + ' and the face on the right is ' +
+			person on the left is ' + eKeyFamily + ' and the person on the right is ' +
 			iKeyFamily + '.</p><p>Type <span style="font-size:120%">"i"</span>\
-			if the face on the left is ' + iKeyFamily + ' and the face on the\
+			if the person on the left is ' + iKeyFamily + ' and the person on the\
 			right is ' + eKeyFamily + '.</p>',
 			//correct_text: 'Correct! These are from %ANS%.',
 			//incorrect_text: 'Wrong! These are from %ANS%.',
