@@ -657,12 +657,22 @@ timeline.push(last_trial);
 
 var dataFileName = String(pid) + '.csv'
 
+var experimentEnd = function () {
+	var params = new URLSearchParams({
+		pid: pid,
+		PROLIFIC_PID: <?php echo $_GET['PROLIFIC_ID'];?>,
+		STUDY_ID: <?php echo $_GET['STUDY_ID'];?>,
+		SESSION_ID: <?php echo $_GET['SESSION_ID'];?>
+	});
+	var queryString = params.toString();
+	var url = "https://cuboulder.qualtrics.com/jfe/form/SV_8cXF1dwNVKszVzw?" +
+		queryString;
+	window.location = url;
+}
+
 jsPsych.init({
 	timeline: timeline,
-	on_finish: function() {
-		// TODO: Make the filename a composite of the ID and the date.
-		;
-	}
+	on_finish: experimentEnd
 });
 
 </script>

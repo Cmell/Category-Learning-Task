@@ -1,0 +1,8 @@
+Link for local testing:
+
+localhost/CatLearnTask?PROLIFIC_PID=34&STUDY_ID=34&SESSION_ID=34
+
+
+Consent page:
+
+https://cuboulder.qualtrics.com/jfe/form/SV_bOTgx1GktoHrzeu?PROLIFIC_PID=34&STUDY_ID=34&SESSION_ID=34

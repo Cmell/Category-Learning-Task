@@ -49,6 +49,9 @@ var fields = [
   "file1",
   "file2",
   "trial_index",
+	"test_family",
+	"left_family",
+	"right_family",
   "key_press",
   "correct",
   "rt",
@@ -157,9 +160,9 @@ var testTrialSet = [];
 for (i=0; i<numTestTrials; i++) {
 	var curFile = testTrialFiles.pop();
 	if (curFile.search('Family1') > -1) {
-		testTrialSet.push([curFile, 'fam1Name', fam1Key, fam1KeyCode]);
+		testTrialSet.push([curFile, 'Thai', testFam1Key, testFam1KeyCode]);
 	} else {
-		testTrialSet.push([curFile, 'Family 2', fam2Key, fam2KeyCode]);
+		testTrialSet.push([curFile, 'Chinese', testFam2Key, testFam2KeyCode]);
 	}
 };
 
@@ -268,6 +271,7 @@ var feedbackText = function () {
 	);
 };
 
+// TODO: set up end criteria
 var checkCriterion = function () {
 	if (critMet) {
 		jsPsych.endCurrentTimeline();
@@ -305,7 +309,7 @@ var lastTrial = function() {
 	return(text);
 };
 
-// TODO: max number of trials, or meet learning criterion (20 at 95%, 200 trial max))
+// ODO: max number of trials, or meet learning criterion (20 at 95%, 200 trial max))
 
 // Initialize the data file
 sendHeader();
@@ -385,7 +389,9 @@ for(i=0; i<numTestTrials; i++) {
 					data: {
             // file1 refers to the left image, and file2 refers to the right image
 						file1: f1T1Fl[0],
-						file2: f1T1Fl[1]
+						file2: f1T1Fl[1],
+						left_family: "Thai",
+						right_family: "Thai"
 					}
 				},
 				{
@@ -395,7 +401,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam1Name,
 					data: {
 						file1: f1T2Fl[0],
-						file2: f1T2Fl[1]
+						file2: f1T2Fl[1],
+						left_family: "Thai",
+						right_family: "Thai"
 					}
 				},
 				// Family 2 trials
@@ -406,7 +414,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam2Name,
 					data: {
 						file1: f2T1Fl[0],
-						file2: f2T1Fl[1]
+						file2: f2T1Fl[1],
+						left_family: "Chinese",
+						right_family: "Chinese"
 					}
 				},
 				{
@@ -416,7 +426,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam2Name,
 					data: {
 						file1: f2T2Fl[0],
-						file2: f2T2Fl[1]
+						file2: f2T2Fl[1],
+						left_family: "Chinese",
+						right_family: "Chinese"
 					}
 				}
 			],
@@ -487,7 +499,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam1Name,
 					data: {
 						file1: f1T1Fl[0],
-						file2: f1T1Fl[1]
+						file2: f1T1Fl[1],
+						left_family: "Thai",
+						right_family: "Chinese"
 					}
 				},
 				{
@@ -497,7 +511,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam1Name,
 					data: {
 						file1: f1T2Fl[0],
-						file2: f1T2Fl[1]
+						file2: f1T2Fl[1],
+						left_family: "Thai",
+						right_family: "Chinese"
 					}
 				},
 				// Family 2 trials
@@ -508,7 +524,10 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam2Name,
 					data: {
 						file1: f2T1Fl[0],
-						file2: f2T1Fl[1]
+						file2: f2T1Fl[1],
+						family: "LeftChinese_RightThai",
+						left_family: "Chinese",
+						right_family: "Thai"
 					}
 				},
 				{
@@ -518,7 +537,9 @@ for(i=0; i<numTestTrials; i++) {
 					text_answer: fam2Name,
 					data: {
 						file1: f2T2Fl[0],
-						file2: f2T2Fl[1]
+						file2: f2T2Fl[1],
+						left_family: "Chinese",
+						right_family: "Thai"
 					}
 				}
 			],
@@ -533,6 +554,7 @@ for(i=0; i<numTestTrials; i++) {
 	var testTrialStim = jsPsych.plugins['catlearn-vsl-grid-scene'].generate_stimulus(
 		[ [curTrial[0]] ], imSize
 	);
+
 	var testTrial = {
 		stimulus: testTrialStim,
 		key_answer: curTrial[3],
@@ -543,7 +565,7 @@ for(i=0; i<numTestTrials; i++) {
 		'or a ' + bTestKeyFamily + ' person (Press the "b" key)?',
     on_finish: endTrial,
 		data: {
-			family: curTrial[1],
+			test_family: curTrial[1],
 			file1: curTrial[0],
       trial_purpose: 'test'
 		}
@@ -575,7 +597,7 @@ jsPsych.data.addProperties({
 });
 
 var timeline = [];
-//TODO: Make an instruction block
+
 var instText1 = '\
 <p>\
 The purpose of this study is to test your ability to learn to differentiate \
@@ -655,14 +677,24 @@ var last_trial = {
 }
 timeline.push(last_trial);
 
-var dataFileName = String(pid) + '.csv'
+var dataFileName = 'EndTaskData/' + String(pid) + '_EndTaskData.csv'
+
+var experimentEnd = function () {
+	var params = new URLSearchParams({
+		pid: pid,
+		PROLIFIC_PID: <?php echo $_GET['PROLIFIC_PID'];?>,
+		STUDY_ID: <?php echo $_GET['STUDY_ID'];?>,
+		SESSION_ID: <?php echo $_GET['SESSION_ID'];?>
+	});
+	var queryString = params.toString();
+	var url = "https://cuboulder.qualtrics.com/jfe/form/SV_8cXF1dwNVKszVzw?" +
+		queryString;
+	window.location = url;
+};
 
 jsPsych.init({
 	timeline: timeline,
-	on_finish: function() {
-		// TODO: Make the filename a composite of the ID and the date.
-		;
-	}
+	on_finish: experimentEnd
 });
 
 </script>
