@@ -680,12 +680,9 @@ timeline.push(last_trial);
 var dataFileName = 'EndTaskData/' + String(pid) + '_EndTaskData.csv'
 
 var experimentEnd = function () {
-	var params = new URLSearchParams({
-		pid: pid,
-		PROLIFIC_PID: <?php echo $_GET['PROLIFIC_PID'];?>,
-		STUDY_ID: <?php echo $_GET['STUDY_ID'];?>,
-		SESSION_ID: <?php echo $_GET['SESSION_ID'];?>
-	});
+	var params = new URLSearchParams(window.location.search);
+	//Add the task PID.
+	params.set("pid", pid);
 	var queryString = params.toString();
 	var url = "https://cuboulder.qualtrics.com/jfe/form/SV_8cXF1dwNVKszVzw?" +
 		queryString;
