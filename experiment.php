@@ -21,6 +21,9 @@ require_once('./Resources/pInfo.php');
 </body>
 <script>
 
+// Query string parameters
+var params = new URLSearchParams(window.location.search);
+
 // Generate a seed for the random number generator
 var d = new Date();
 var seed = d.getTime();
@@ -43,6 +46,7 @@ var fields = [
   "pid",
   "condition",
   "seed",
+	"prolific_pid",
   "e_family",
   "i_family",
 	"y_family",
@@ -597,7 +601,8 @@ jsPsych.data.addProperties({
 	i_family: iKeyFamily,
 	y_family: yTestKeyFamily,
 	b_family: bTestKeyFamily,
-	seed: seed
+	seed: seed,
+	prolific_pid: params.get("PROLIFIC_PID")==null ? 'NA' : params.get("PROLIFIC_PID")
 });
 
 var timeline = [];
@@ -684,7 +689,7 @@ timeline.push(last_trial);
 var dataFileName = 'EndTaskData/' + String(pid) + '_EndTaskData.csv'
 
 var experimentEnd = function () {
-	var params = new URLSearchParams(window.location.search);
+
 	//Add the task PID.
 	params.set("pid", pid);
 	var queryString = params.toString();
