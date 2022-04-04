@@ -296,14 +296,14 @@ var lastTrial = function() {
 		Congratulations! You were correct for ' + ratePerc +
 		'% of the last 20 trials.</p>\
 		<p style="text-align:center;">\
-		The study is now over. Thank you for participating in this study.\
+		You have completed the task. Please press the spacebar to continue to the survey.\
 		</p>'
 	} else {
 		var text = '<p style="text-align:center;color:green;">\
 		Great job! You were correct for ' + ratePerc +
 		'% of the last 20 trials.\
 		</p><p style="text-align:center;">\
-		The study is now over. Thank you for participating in this study.\
+		You have completed the task. Please press the spacebar to continue to the survey.\
 		</p>'
 	}
 	return(text);
