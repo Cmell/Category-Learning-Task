@@ -45,6 +45,8 @@ var fields = [
   "seed",
   "e_family",
   "i_family",
+	"y_family",
+	"b_family",
   "trial_type",
   "file1",
   "file2",
@@ -593,6 +595,8 @@ jsPsych.data.addProperties({
 	condition: cond,
 	e_family: eKeyFamily,
 	i_family: iKeyFamily,
+	y_family: yTestKeyFamily,
+	b_family: bTestKeyFamily,
 	seed: seed
 });
 
